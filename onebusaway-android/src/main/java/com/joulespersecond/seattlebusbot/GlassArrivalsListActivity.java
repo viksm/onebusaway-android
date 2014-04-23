@@ -22,6 +22,7 @@ import com.joulespersecond.oba.elements.ObaArrivalInfo;
 import com.joulespersecond.oba.elements.ObaSituation;
 import com.joulespersecond.oba.elements.ObaStop;
 import com.joulespersecond.oba.glass.ObaStopsForLocationTask;
+import com.joulespersecond.oba.glass.SensorListController;
 import com.joulespersecond.oba.provider.ObaContract;
 import com.joulespersecond.oba.region.ObaRegionsTask;
 import com.joulespersecond.oba.request.ObaArrivalInfoResponse;
@@ -49,6 +50,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,6 +116,10 @@ public class GlassArrivalsListActivity extends ListActivity
     Location mLastKnownLocation;
 
     LocationManager mLocationManager;
+
+    ListView mListView;
+
+    SensorListController mListController;
 
     public static class Builder {
 
@@ -200,6 +206,9 @@ public class GlassArrivalsListActivity extends ListActivity
 
         // Set up the LoaderManager now
         getLoaderManager();
+
+        // Set up gesture detector
+        initListController();
 
         initLocation();
 
@@ -337,6 +346,13 @@ public class GlassArrivalsListActivity extends ListActivity
         mProgressMessage.setText(text);
     }
 
+    private void initListController() {
+        mListView = getListView();
+        mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+
+        mListController = new SensorListController(this, mListView, mAdapter);
+    }
+
     private void initLoader(Bundle bundle) {
         // This sets the stopId and uri
         setStopId();
@@ -459,12 +475,15 @@ public class GlassArrivalsListActivity extends ListActivity
             }
         }
 
+        mListController.onResume();
+
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         mRefreshHandler.removeCallbacks(mRefresh);
+        mListController.onPause();
         super.onPause();
     }
 
