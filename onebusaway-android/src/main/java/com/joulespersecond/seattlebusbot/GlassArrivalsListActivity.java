@@ -15,6 +15,8 @@
  */
 package com.joulespersecond.seattlebusbot;
 
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
 import com.google.glass.widget.SliderView;
 
 import com.joulespersecond.oba.ObaApi;
@@ -45,10 +47,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +64,7 @@ import java.util.List;
 
 public class GlassArrivalsListActivity extends ListActivity
         implements LoaderManager.LoaderCallbacks<ObaArrivalInfoResponse>, ObaRegionsTask.Callback,
-        ObaStopsForLocationTask.Callback, LocationListener {
+        ObaStopsForLocationTask.Callback, LocationListener, GestureDetector.BaseListener {
 
     public static final String STOP_NAME = ".StopName";
 
@@ -114,6 +118,10 @@ public class GlassArrivalsListActivity extends ListActivity
     Location mLastKnownLocation;
 
     LocationManager mLocationManager;
+
+    ListView mListView;
+
+    GestureDetector mGestureDetector;
 
     public static class Builder {
 
@@ -200,6 +208,8 @@ public class GlassArrivalsListActivity extends ListActivity
 
         // Set up the LoaderManager now
         getLoaderManager();
+
+        initGestureDetector();
 
         initLocation();
 
@@ -471,6 +481,39 @@ public class GlassArrivalsListActivity extends ListActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return false;
+    }
+
+    private void initGestureDetector() {
+        mListView = getListView();
+
+        mGestureDetector = new GestureDetector(this);
+        mGestureDetector.setBaseListener(this);
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (mGestureDetector != null) {
+            return mGestureDetector.onMotionEvent(event);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onGesture(Gesture gesture) {
+        switch (gesture) {
+            case SWIPE_LEFT:
+                Log.d(TAG, "Gesture - swipe left");
+                // Scroll Up
+                mListView.setSelection(mListView.getSelectedItemPosition() - 1);
+                return true;
+            case SWIPE_RIGHT:
+                Log.d(TAG, "Gesture - swipe right");
+                // Scroll Down
+                mListView.setSelection(mListView.getSelectedItemPosition() + 1);
+                return true;
+            default:
+                return false;
+        }
     }
 
     private void initLocation() {
