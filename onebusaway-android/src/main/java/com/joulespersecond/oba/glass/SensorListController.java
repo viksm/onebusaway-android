@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -34,6 +33,8 @@ public class SensorListController implements SensorEventListener {
 
     private float mPitch;
 
+    boolean mActive = true;
+
     public SensorListController(Context context, ListView list, ListAdapter adapter) {
         this.mContext = context;
         this.mList = list;
@@ -42,6 +43,9 @@ public class SensorListController implements SensorEventListener {
         history[1] = 10;
     }
 
+    /**
+     * Should be called from the onResume() of Activity
+     */
     public void onResume() {
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(this,
@@ -49,13 +53,23 @@ public class SensorListController implements SensorEventListener {
                 SensorManager.SENSOR_DELAY_UI);
     }
 
+    /**
+     * Should be called from the onPause() of Activity
+     */
     public void onPause() {
         mSensorManager.unregisterListener(this);
     }
 
+    /**
+     * Toggles whether the controller modifies the view
+     */
+    public void toggleActive() {
+        mActive = !mActive;
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mList == null || mAdapter == null) {
+        if (mList == null || mAdapter == null || !mActive) {
             return;
         }
 
@@ -68,7 +82,7 @@ public class SensorListController implements SensorEventListener {
             mHeading = (float) Math.toDegrees(mOrientation[0]);
             mPitch = (float) Math.toDegrees(mOrientation[1]);
 
-            float xDelta = history[0] - mHeading;
+            float xDelta = history[0] - mHeading;  // Currently unused
             float yDelta = history[1] - mPitch;
 
             history[0] = mHeading;
@@ -76,18 +90,18 @@ public class SensorListController implements SensorEventListener {
 
             float Y_DELTA_THRESHOLD = 0.15f;
 
-            Log.d(TAG, "Y Delta = " + yDelta);
+//            Log.d(TAG, "Y Delta = " + yDelta);
 
-            int scrollHeight = mList.getHeight();
+            int scrollHeight = mList.getHeight() / 16; // 4 items per page, scroll 1/4 an item
 
-            Log.d(TAG, "ScrollHeight = " + scrollHeight);
+//            Log.d(TAG, "ScrollHeight = " + scrollHeight);
 
             if (yDelta > Y_DELTA_THRESHOLD) {
-                Log.d(TAG, "Detected change in pitch up...");
-                mList.smoothScrollBy(-scrollHeight, 100);
+//                Log.d(TAG, "Detected change in pitch up...");
+                mList.smoothScrollBy(-scrollHeight, 0);
             } else if (yDelta < -Y_DELTA_THRESHOLD) {
-                Log.d(TAG, "Detected change in pitch down...");
-                mList.smoothScrollBy(scrollHeight, 100);
+//                Log.d(TAG, "Detected change in pitch down...");
+                mList.smoothScrollBy(scrollHeight, 0);
             }
         }
     }

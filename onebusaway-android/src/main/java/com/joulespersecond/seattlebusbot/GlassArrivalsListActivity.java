@@ -49,6 +49,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -349,8 +350,18 @@ public class GlassArrivalsListActivity extends ListActivity
     private void initListController() {
         mListView = getListView();
         mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+        mListView.setSelector(android.R.color.transparent);
+        mListView.setClickable(true);
 
         mListController = new SensorListController(this, mListView, mAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Toggle on and off accelerometer control of the list by tapping
+                mListController.toggleActive();
+            }
+        });
     }
 
     private void initLoader(Bundle bundle) {
