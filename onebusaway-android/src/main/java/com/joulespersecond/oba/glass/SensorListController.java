@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.widget.ListView;
 
 /**
- * Implements accelerometer-based scrolling of a ListView
+ * Implements sensor-based scrolling of a ListView
  */
 public class SensorListController implements SensorEventListener, GestureDetector.BaseListener {
 
