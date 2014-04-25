@@ -59,13 +59,15 @@ public class SensorListController implements SensorEventListener, GestureDetecto
     @Override
     public boolean onGesture(Gesture gesture) {
         switch (gesture) {
-            case LONG_PRESS:
+            case TWO_LONG_PRESS:
                 // Toggle on and off accelerometer control of the list by long press
-                // Play sound to acknowledge action
-                AudioManager audio = (AudioManager) mContext
-                        .getSystemService(Context.AUDIO_SERVICE);
-                audio.playSoundEffect(Sounds.SUCCESS);
+                playSuccessSound();
                 toggleActive();
+                return true;
+            case TWO_TAP:
+                // Go to top of the list
+                playSuccessSound();
+                scrollToTop();
                 return true;
         }
         return false;
@@ -116,11 +118,12 @@ public class SensorListController implements SensorEventListener, GestureDetecto
             history[0] = mHeading;
             history[1] = mPitch;
 
-            float Y_DELTA_THRESHOLD = 0.15f;
+            float Y_DELTA_THRESHOLD = 0.10f;
 
 //            Log.d(TAG, "Y Delta = " + yDelta);
 
-            int scrollHeight = mList.getHeight() / 16; // 4 items per page, scroll 1/4 an item
+            int scrollHeight = mList.getHeight()
+                    / 19; // 4 items per page, scroll almost 1/5 an item
 
 //            Log.d(TAG, "ScrollHeight = " + scrollHeight);
 
@@ -136,5 +139,15 @@ public class SensorListController implements SensorEventListener, GestureDetecto
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    private void scrollToTop() {
+        mList.smoothScrollToPosition(0);
+    }
+
+    private void playSuccessSound() {
+        // Play sound to acknowledge action
+        AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        audio.playSoundEffect(Sounds.SUCCESS);
     }
 }
