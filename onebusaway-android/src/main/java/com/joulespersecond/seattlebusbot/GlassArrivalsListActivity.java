@@ -211,7 +211,6 @@ public class GlassArrivalsListActivity extends ListActivity
         // Set up the LoaderManager now
         getLoaderManager();
 
-        // Set up gesture detector
         initListController();
 
         initLocation();
@@ -342,6 +341,7 @@ public class GlassArrivalsListActivity extends ListActivity
         }
         return false;
     }
+
     //
     // Helpers
     //
