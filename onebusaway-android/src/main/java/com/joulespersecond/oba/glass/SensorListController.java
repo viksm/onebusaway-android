@@ -1,25 +1,28 @@
 package com.joulespersecond.oba.glass;
 
+import com.google.android.glass.media.Sounds;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.widget.ListAdapter;
+import android.media.AudioManager;
+import android.view.MotionEvent;
 import android.widget.ListView;
 
 /**
  * Implements accelerometer-based scrolling of a ListView
  */
-public class SensorListController implements SensorEventListener {
+public class SensorListController implements SensorEventListener, GestureDetector.BaseListener {
 
     static final String TAG = "SensorListController";
 
     Context mContext;
 
     ListView mList;
-
-    ListAdapter mAdapter;
 
     SensorManager mSensorManager;
 
@@ -35,12 +38,37 @@ public class SensorListController implements SensorEventListener {
 
     boolean mActive = true;
 
-    public SensorListController(Context context, ListView list, ListAdapter adapter) {
+    GestureDetector mGestureDetector;
+
+    public SensorListController(Context context, ListView list) {
         this.mContext = context;
         this.mList = list;
-        mAdapter = adapter;
         history[0] = 10;
         history[1] = 10;
+        mGestureDetector = new GestureDetector(mContext);
+        mGestureDetector.setBaseListener(this);
+    }
+
+    /**
+     * Receive pass-through of event from Context
+     */
+    public boolean onMotionEvent(MotionEvent event) {
+        return mGestureDetector.onMotionEvent(event);
+    }
+
+    @Override
+    public boolean onGesture(Gesture gesture) {
+        switch (gesture) {
+            case LONG_PRESS:
+                // Toggle on and off accelerometer control of the list by long press
+                // Play sound to acknowledge action
+                AudioManager audio = (AudioManager) mContext
+                        .getSystemService(Context.AUDIO_SERVICE);
+                audio.playSoundEffect(Sounds.SUCCESS);
+                toggleActive();
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -69,7 +97,7 @@ public class SensorListController implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mList == null || mAdapter == null || !mActive) {
+        if (mList == null || !mActive) {
             return;
         }
 

@@ -15,6 +15,7 @@
  */
 package com.joulespersecond.seattlebusbot;
 
+import com.google.android.glass.touchpad.GestureDetector;
 import com.google.glass.widget.SliderView;
 
 import com.joulespersecond.oba.ObaApi;
@@ -46,10 +47,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -121,6 +122,8 @@ public class GlassArrivalsListActivity extends ListActivity
     ListView mListView;
 
     SensorListController mListController;
+
+    GestureDetector mGestureDetector;
 
     public static class Builder {
 
@@ -331,6 +334,14 @@ public class GlassArrivalsListActivity extends ListActivity
         mAdapter.setData(null, mRoutesFilter);
     }
 
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        // We need to pass events through to the list controller
+        if (mListController != null) {
+            return mListController.onMotionEvent(event);
+        }
+        return false;
+    }
     //
     // Helpers
     //
@@ -353,15 +364,7 @@ public class GlassArrivalsListActivity extends ListActivity
         mListView.setSelector(android.R.color.transparent);
         mListView.setClickable(true);
 
-        mListController = new SensorListController(this, mListView, mAdapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Toggle on and off accelerometer control of the list by tapping
-                mListController.toggleActive();
-            }
-        });
+        mListController = new SensorListController(this, mListView);
     }
 
     private void initLoader(Bundle bundle) {
