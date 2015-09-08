@@ -197,7 +197,7 @@ class ArrivalsListHeader {
 
     private TextView mEtaRouteDirection1;
 
-    private RelativeLayout mEtaAndMin1;
+    private RelativeLayout mIndicatorContainer1;
 
     private TextView mEtaArrivalInfo1;
 
@@ -220,7 +220,7 @@ class ArrivalsListHeader {
 
     private TextView mEtaRouteDirection2;
 
-    private RelativeLayout mEtaAndMin2;
+    private RelativeLayout mIndicatorContainer2;
 
     private TextView mEtaArrivalInfo2;
 
@@ -314,7 +314,8 @@ class ArrivalsListHeader {
         mEtaReminder1.setColorFilter(mView.getResources().getColor(R.color.header_text_color));
         mEtaRouteName1 = (TextView) mEtaContainer1.findViewById(R.id.eta_route_name);
         mEtaRouteDirection1 = (TextView) mEtaContainer1.findViewById(R.id.eta_route_direction);
-        mEtaAndMin1 = (RelativeLayout) mEtaContainer1.findViewById(R.id.eta_and_min);
+        mIndicatorContainer1 = (RelativeLayout) mEtaContainer1
+                .findViewById(R.id.eta_realtime_indicator_container);
         mEtaArrivalInfo1 = (TextView) mEtaContainer1.findViewById(R.id.eta);
         mEtaMin1 = (TextView) mEtaContainer1.findViewById(R.id.eta_min);
         mEtaRealtime1 = (ViewGroup) mEtaContainer1.findViewById(R.id.eta_realtime_indicator);
@@ -330,7 +331,8 @@ class ArrivalsListHeader {
         mEtaReminder2 = (ImageButton) mEtaContainer2.findViewById(R.id.reminder);
         mEtaReminder2.setColorFilter(mView.getResources().getColor(R.color.header_text_color));
         mEtaRouteName2 = (TextView) mEtaContainer2.findViewById(R.id.eta_route_name);
-        mEtaAndMin2 = (RelativeLayout) mEtaContainer2.findViewById(R.id.eta_and_min);
+        mIndicatorContainer2 = (RelativeLayout) mEtaContainer2
+                .findViewById(R.id.eta_realtime_indicator_container);
         mEtaRouteDirection2 = (TextView) mEtaContainer2.findViewById(R.id.eta_route_direction);
         mEtaArrivalInfo2 = (TextView) mEtaContainer2.findViewById(R.id.eta);
         mEtaMin2 = (TextView) mEtaContainer2.findViewById(R.id.eta_min);
@@ -619,9 +621,9 @@ class ArrivalsListHeader {
                 if (mArrivalInfo.get(indexFirstEta).getPredicted()) {
                     // We have real-time data - set the color and show the indicator
                     final Integer color = mArrivalInfo.get(indexFirstEta).getColorStyleB();
-                    mEtaAndMin1.setBackgroundResource(
+                    mIndicatorContainer1.setBackgroundResource(
                             R.drawable.round_corners_style_b_header_status);
-                    GradientDrawable d = (GradientDrawable) mEtaAndMin1.getBackground();
+                    GradientDrawable d = (GradientDrawable) mIndicatorContainer1.getBackground();
                     if (color != R.color.stop_info_ontime_style_b) {
                         // Show early/late color
                         d.setColor(mContext.getResources().getColor(color));
@@ -629,7 +631,7 @@ class ArrivalsListHeader {
                         // For on-time, use header default color
                         d.setColor(mContext.getResources().getColor(R.color.theme_primary));
                     }
-                    mEtaAndMin1.setOnClickListener(new View.OnClickListener() {
+                    mIndicatorContainer1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -664,7 +666,7 @@ class ArrivalsListHeader {
                                     new ColorDrawable(mContext.getResources()
                                             .getColor(android.R.color.transparent)));
                             p.setOutsideTouchable(true);
-                            p.showAsDropDown(mEtaAndMin1);
+                            p.showAsDropDown(mIndicatorContainer1);
                         }
                     });
                     UIHelp.showViewWithAnimation(mEtaRealtime1, mShortAnimationDuration);
@@ -704,9 +706,10 @@ class ArrivalsListHeader {
                     if (mArrivalInfo.get(indexSecondEta).getPredicted()) {
                         // We have real-time data - set the color and show the indicator
                         final Integer color = mArrivalInfo.get(indexSecondEta).getColorStyleB();
-                        mEtaAndMin2.setBackgroundResource(
+                        mIndicatorContainer2.setBackgroundResource(
                                 R.drawable.round_corners_style_b_header_status);
-                        GradientDrawable d = (GradientDrawable) mEtaAndMin2.getBackground();
+                        GradientDrawable d = (GradientDrawable) mIndicatorContainer2
+                                .getBackground();
                         if (color != R.color.stop_info_ontime_style_b) {
                             // Show early/late color
                             d.setColor(mContext.getResources().getColor(color));
@@ -714,7 +717,7 @@ class ArrivalsListHeader {
                             // For on-time, use header default color
                             d.setColor(mContext.getResources().getColor(R.color.theme_primary));
                         }
-                        mEtaAndMin2.setOnClickListener(new View.OnClickListener() {
+                        mIndicatorContainer2.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -752,7 +755,7 @@ class ArrivalsListHeader {
                                         new ColorDrawable(mContext.getResources()
                                                 .getColor(android.R.color.transparent)));
                                 p.setOutsideTouchable(true);
-                                p.showAsDropDown(mEtaAndMin2);
+                                p.showAsDropDown(mIndicatorContainer2);
                             }
                         });
                         UIHelp.showViewWithAnimation(mEtaRealtime2, mShortAnimationDuration);
