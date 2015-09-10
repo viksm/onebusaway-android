@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:gravity="left">
+    <include
+            android:id="@+id/eta_status"
+            layout="@layout/arrivals_list_header_tv_template_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_marginLeft="@dimen/arrival_header_text_pad_left"
+            android:paddingLeft="2dp"/>
+</TableRow>

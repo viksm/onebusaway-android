@@ -96,8 +96,12 @@
                      layout="@layout/arrivals_list_header_row_template"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     android:paddingBottom="5dp"
                      android:visibility="gone"/>
+            <include android:id="@+id/eta_status1"
+                     layout="@layout/arrivals_list_header_row_status"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:paddingBottom="5dp"/>
 
             <!-- Line separator -->
             <TableRow
@@ -130,6 +134,10 @@
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:visibility="gone"/>
+            <include android:id="@+id/eta_status2"
+                     layout="@layout/arrivals_list_header_row_status"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"/>
         </TableLayout>
 
         <!-- Stop name, star, and stopinfo button  -->
