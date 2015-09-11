@@ -28,6 +28,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class ArrivalsListAdapterStyleA extends ArrivalsListAdapterBase<ArrivalIn
         TextView time = (TextView) view.findViewById(R.id.time);
         TextView status = (TextView) view.findViewById(R.id.status);
         TextView etaView = (TextView) view.findViewById(R.id.eta);
+        RelativeLayout etaAndMin = (RelativeLayout) view.findViewById(R.id.eta_and_min);
 
         final ObaArrivalInfo arrivalInfo = stopInfo.getInfo();
         final Context context = getContext();
@@ -83,9 +85,6 @@ public class ArrivalsListAdapterStyleA extends ArrivalsListAdapterBase<ArrivalIn
 
         Integer colorCode = stopInfo.getColor();
         if (colorCode != null) {
-            int color = context.getResources().getColor(colorCode);
-            etaView.setTextColor(color);
-
             status.setBackgroundResource(R.drawable.round_corners_style_b_status);
             GradientDrawable d = (GradientDrawable) status.getBackground();
             if (colorCode != null) {
@@ -94,6 +93,17 @@ public class ArrivalsListAdapterStyleA extends ArrivalsListAdapterBase<ArrivalIn
             } else {
                 // Set scheduled color
                 d.setColor(
+                        context.getResources().getColor(R.color.stop_info_estimated_time));
+            }
+
+            etaAndMin.setBackgroundResource(R.drawable.round_corners_style_b_header_status);
+            GradientDrawable d2 = (GradientDrawable) etaAndMin.getBackground();
+            if (colorCode != null) {
+                // Set real-time color
+                d2.setColor(context.getResources().getColor(colorCode));
+            } else {
+                // Set scheduled color
+                d2.setColor(
                         context.getResources().getColor(R.color.stop_info_estimated_time));
             }
         }

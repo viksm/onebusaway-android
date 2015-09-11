@@ -101,6 +101,7 @@
     <style name="StopInfoEta">
         <item name="android:textSize">36sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/header_text_color</item>
     </style>
     <style name="LoadMoreArrivals">
         <item name="android:textSize">18sp</item>
