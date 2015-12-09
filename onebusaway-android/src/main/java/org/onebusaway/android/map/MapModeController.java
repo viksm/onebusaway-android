@@ -119,11 +119,14 @@ public interface MapModeController {
         /**
          * Zoom to include the closest vehicle from the response within the map view
          *
+         * @param tripId The tripId for the vehicle that should be included in the zoomed bounds, or
+         *               null if the closest vehicle should be used.
          * @param routeIds markers representing real-time positions for the provided routeIds will
          *                 be
          *                 checked for proximity to the location (all other routes are ignored)
          */
-        void zoomIncludeClosestVehicle(HashSet<String> routeIds, ObaTripsForRouteResponse response);
+        void zoomIncludeVehicle(String tripId, HashSet<String> routeIds,
+                ObaTripsForRouteResponse response);
 
         // Post invalidate
         void postInvalidate();

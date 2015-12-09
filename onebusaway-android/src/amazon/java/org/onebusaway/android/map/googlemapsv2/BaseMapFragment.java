@@ -781,21 +781,23 @@ public class BaseMapFragment extends SupportMapFragment
     }
 
     /**
-     * Zoom to include the current map bounds plus the location of the nearest vehicle
-     *
+     * Zoom to include the current map bounds plus the location of a vehicle
+
+     * @param tripId The tripId for the vehicle that should be included in the zoomed bounds, or
+     *               null if the closest vehicle should be used.
      * @param routeIds markers representing real-time positions for the provided routeIds will be
      *                 checked for proximity to the location (all other routes are ignored)
      * @param response trips-for-route API response, which includes real-time vehicle locations in
      *                 status
      */
     @Override
-    public void zoomIncludeClosestVehicle(HashSet<String> routeIds,
+    public void zoomIncludeVehicle(String tripId, HashSet<String> routeIds,
             ObaTripsForRouteResponse response) {
         if (mMap == null) {
             return;
         }
         LatLng closestVehicleLocation = MapHelpV2
-                .getClosestVehicle(response, routeIds, getMapCenterAsLocation());
+                .getClosestVehicle(tripId, response, routeIds, getMapCenterAsLocation());
 
         LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 

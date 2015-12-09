@@ -785,6 +785,7 @@ public class HomeActivity extends AppCompatActivity
         bundle.putBoolean(MapParams.ZOOM_TO_ROUTE, false);
         bundle.putBoolean(MapParams.ZOOM_INCLUDE_CLOSEST_VEHICLE, true);
         bundle.putString(MapParams.ROUTE_ID, arrivalInfo.getInfo().getRouteId());
+        bundle.putString(MapParams.TRIP_ID, arrivalInfo.getInfo().getTripId());
         mMapFragment.setMapMode(MapParams.MODE_ROUTE, bundle);
 
         return true;

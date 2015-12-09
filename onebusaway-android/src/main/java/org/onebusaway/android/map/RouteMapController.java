@@ -58,6 +58,8 @@ public class RouteMapController implements MapModeController {
 
     private String mRouteId;
 
+    private String mTripId;
+
     private boolean mZoomToRoute;
 
     private boolean mZoomIncludeClosestVehicle;
@@ -96,6 +98,7 @@ public class RouteMapController implements MapModeController {
     public void setState(Bundle args) {
         assert (args != null);
         String routeId = args.getString(MapParams.ROUTE_ID);
+        mTripId = args.getString(MapParams.TRIP_ID);
 
         // If the previous map zoom isn't the default, then zoom to that level as a start
         float mapZoom = args.getFloat(MapParams.ZOOM, MapParams.DEFAULT_ZOOM);
@@ -209,6 +212,7 @@ public class RouteMapController implements MapModeController {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(MapParams.ROUTE_ID, mRouteId);
+        outState.putString(MapParams.ROUTE_ID, mTripId);
         outState.putBoolean(MapParams.ZOOM_TO_ROUTE, mZoomToRoute);
         outState.putBoolean(MapParams.ZOOM_INCLUDE_CLOSEST_VEHICLE, mZoomIncludeClosestVehicle);
     }
@@ -500,7 +504,7 @@ public class RouteMapController implements MapModeController {
             obaMapView.updateVehicles(routes, response);
 
             if (mZoomIncludeClosestVehicle) {
-                obaMapView.zoomIncludeClosestVehicle(routes, response);
+                obaMapView.zoomIncludeVehicle(mTripId, routes, response);
                 mZoomIncludeClosestVehicle = false;
             }
 

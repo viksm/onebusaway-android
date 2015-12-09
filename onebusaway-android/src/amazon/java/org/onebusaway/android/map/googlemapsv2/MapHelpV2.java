@@ -143,17 +143,19 @@ public class MapHelpV2 {
     }
 
     /**
-     * Gets the location of the vehicle closest to the provided location running the provided
-     * routes
+     * Gets the location of the vehicle for the provided tripId, or the closest to the provided location
+     * running the provided routes if tripId is null
      *
+     * @param tripId The tripId for the vehicle that should be included in the zoomed bounds, or
+     *               null if the closest vehicle should be used.
      * @param response response containing list of trips with vehicle locations
      * @param routeIds markers representing real-time positions for the provided routeIds will be
      *                 checked for proximity to the location (all other routes are ignored)
      * @param loc      location
-     * @return the closest vehicle location to the given location, or null if a closest vehicle
-     * couldn't be found
+     * @return the location of the vehicle for the provided tripId, or the closest vehicle location
+     * to the given location if tripId is null, or null if a closest vehicle couldn't be found
      */
-    public static LatLng getClosestVehicle(ObaTripsForRouteResponse response,
+    public static LatLng getClosestVehicle(String tripId, ObaTripsForRouteResponse response,
             HashSet<String> routeIds, Location loc) {
         if (loc == null) {
             return null;
@@ -161,6 +163,7 @@ public class MapHelpV2 {
         float minDist = Float.MAX_VALUE;
         ObaTripStatus closestVehicle = null;
         Location closestVehicleLocation = null;
+        Location tripVehicleLocation = null;
         Float distToVehicle;
 
         for (ObaTripDetails detail : response.getTrips()) {
@@ -184,6 +187,14 @@ public class MapHelpV2 {
                 // No vehicle location - continue to next trip
                 continue;
             }
+
+            if (status.getActiveTripId().equals(tripId)) {
+                // We found the location of the vehicle for the provided tripId
+                tripVehicleLocation = vehicleLocation;
+                closestVehicle = status;
+                break;
+            }
+
             distToVehicle = vehicleLocation.distanceTo(loc);
 
             if (distToVehicle < minDist) {
@@ -191,6 +202,14 @@ public class MapHelpV2 {
                 closestVehicle = status;
                 minDist = distToVehicle;
             }
+        }
+
+        if (tripVehicleLocation != null) {
+            Log.d(TAG, "Vehicle for tripId " + tripId + " is vehicleId=" +
+                    closestVehicle.getVehicleId() + ", tripId=" + closestVehicle.getActiveTripId() +
+                    " at " + tripVehicleLocation.getLatitude() + "," +
+                    tripVehicleLocation.getLongitude());
+            return makeLatLng(tripVehicleLocation);
         }
 
         if (closestVehicleLocation == null) {
