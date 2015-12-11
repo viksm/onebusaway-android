@@ -672,14 +672,7 @@ public class ArrivalsListFragment extends ListFragment
     }
 
     public void showRouteOnMap(ArrivalInfo arrivalInfo) {
-        boolean handled = false;
-        if (mListener != null) {
-            handled = mListener.onShowRouteOnMapSelected(arrivalInfo);
-        }
-        // If the event hasn't been handled by the listener, start a new activity
-        if (!handled) {
-            HomeActivity.start(getActivity(), arrivalInfo.getInfo().getRouteId());
-        }
+        HomeActivity.start(getActivity(), arrivalInfo.getInfo().getRouteId());
     }
 
     //
