@@ -15,6 +15,10 @@
     limitations under the License.
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Toolbar -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
     <!-- Navigation Drawer -->
     <style name="NavDrawerListItem" parent="style/Widget.AppCompat.ListView.Menu">
         <item name="android:background">@drawable/navdrawer_item_selectable</item>
@@ -218,4 +222,21 @@
     </style>
     <style name="Theme.OneBusAway.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="Theme.OneBusAway.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!-- Tutorial - ShowcaseView -->
+    <style name="CustomShowcaseTheme" parent="ShowcaseView">
+        <item name="sv_backgroundColor">#e54CAF50</item>
+        <item name="sv_showcaseColor">@color/theme_primary_dark</item>
+        <item name="sv_buttonText">Got it!</item>
+        <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
+        <item name="sv_detailTextAppearance">@style/CustomText2</item>
+    </style>
+
+    <style name="CustomTitle2" parent="TextAppearance.ShowcaseView.Title.Light">
+        <item name="android:textColor">#deffffff</item>
+    </style>
+
+    <style name="CustomText2" parent="TextAppearance.ShowcaseView.Detail.Light">
+        <item name="android:textColor">#8affffff</item>
+    </style>
 </resources>

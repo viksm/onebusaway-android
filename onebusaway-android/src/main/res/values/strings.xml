@@ -525,6 +525,12 @@
     </string>
     <string name="night_light_create_shortcut">Create shortcut</string>
 
+    <!-- Tutorials -->
+    <string name="tutorial_welcome_title">Welcome to OneBusAway!</string>
+    <string name="tutorial_welcome_text">Use the menu button to access the app features, or tap on
+        a bus stop on the map to see arrival information.
+    </string>
+
     <!-- About -->
     <string name="title_activity_about">About</string>
     <string name="about_text">
