@@ -16,8 +16,11 @@ import org.onebusaway.android.ui.ArrivalInfo;
 import org.onebusaway.android.util.UIUtils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -422,6 +425,14 @@ public class UIUtilTest extends ObaTestCase {
                 arrivalInfo.get(0).getTimeText());
         assertEquals("Departed 2 min late", arrivalInfo.get(1).getStatusText());
         assertEquals("Departed at " + formatTime(1438804320000L), arrivalInfo.get(1).getTimeText());
+//        Log.d("minuteRounding", "orig - " + formatTime(1438804320000L));
+//        long modified = 1438804355000L; // Wed Aug 05 15:52:35 EDT 2015
+//        long modified = 1438804379000L; // Wed Aug 05 15:52:59 EDT 2015
+//        Date d = new Date();
+//        d.setTime(modified);
+//        Calendar c = Calendar.getInstance();
+//        Log.d("minuteRounding", "calendar - " + d.toString());
+//        Log.d("minuteRounding", "modified - " + formatTime(modified));
         assertEquals("Departed 1 min early", arrivalInfo.get(2).getStatusText());
         assertEquals("Departed at " + formatTime(1438804440000L), arrivalInfo.get(2).getTimeText());
         assertEquals("Arrived on time", arrivalInfo.get(3).getStatusText());
@@ -596,6 +607,11 @@ public class UIUtilTest extends ObaTestCase {
     }
 
     private String formatTime(long time) {
+        Date d = new Date();
+        d.setTime(time);
+        Calendar c = Calendar.getInstance();
+        Log.d("minuteRounding", "calendar - " + d.toString());
+
         return UIUtils.formatTime(getContext(), time);
     }
 }
