@@ -136,6 +136,7 @@
         <item>@string/rt_arrival_problem</item>
         <item>@string/rt_app_feedback</item>
         <item>@string/rt_ideas</item>
+        <item>Test Social Activity</item>
     </string-array>
     <string-array name="report_types_desc">
         <item>@string/rt_message_customer_service</item>
@@ -143,6 +144,7 @@
         <item>@string/rt_message_arrival_problem</item>
         <item>@string/rt_message_app_feedback</item>
         <item>@string/rt_message_ideas</item>
+        <item>Test intent passing from previous activity</item>
     </string-array>
 
     <array name="report_types_icons">
@@ -151,6 +153,7 @@
         <item>@drawable/ic_arrival_time</item>
         <item>@drawable/ic_app_feedback</item>
         <item>@drawable/ic_light_bulb</item>
+        <item>@drawable/ic_alert_warning</item>
     </array>
 
     <string-array name="report_types_without_open311">

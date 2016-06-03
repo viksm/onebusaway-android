@@ -463,7 +463,8 @@
     <string name="bug_report_body">Complaints, kudos, or bug reports are welcome!\n\n\nApp Version:
         %1$s\nModel: %2$s\nOS Version: %3$s / %4$d\nLoc: %5$s
     </string>
-    <string name="bug_report_body_without_location">Complaints, kudos, or bug reports are welcome!\n\n\nApp Version:
+    <string name="bug_report_body_without_location">Complaints, kudos, or bug reports are
+        welcome!\n\n\nApp Version:
         %1$s\nModel: %2$s\nOS Version: %3$s / %4$d
     </string>
     <string name="bug_report_error">Unable to send the bug report: no suitable application found.
@@ -559,11 +560,12 @@
 
     <!-- Issue reporting implementation-->
     <string name="region_dialog_message">Are you in the %1$s region?</string>
-    <string name="preference_region_dialog_message"> Your region is currently set to %1$s.
-    If we got this wrong, please tap on \'Your Region\' to change it!</string>
+    <string name="preference_region_dialog_message">Your region is currently set to %1$s.
+        If we got this wrong, please tap on \'Your Region\' to change it!
+    </string>
     <string name="preference_region_dialog_title">Please check region</string>
-    <string name="report_dialog_out_of_region_message"> Please select a stop.</string>
-    <string name="report_dialog_trip"> Please select an arrival time.</string>
+    <string name="report_dialog_out_of_region_message">Please select a stop.</string>
+    <string name="report_dialog_trip">Please select an arrival time.</string>
 
     <!-- report issue screen-->
     <string name="ri_desc_hint">Issue description</string>
@@ -582,7 +584,9 @@
     <string name="ri_no_trip">No arrival times, please check back later.</string>
     <string name="ri_anonymous_checkbox">Keep it anonymous</string>
     <string name="ri_submitting_message">Submitting your report</string>
-    <string name="ri_unsuccessful_submit">An error occurred during submission, please try again later.</string>
+    <string name="ri_unsuccessful_submit">An error occurred during submission, please try again
+        later.
+    </string>
 
     <!-- report issue types screen-->
     <!-- Remove rt_infrastructure_problem and use rt_stop_problem -->
@@ -596,7 +600,9 @@
     <string name="rt_app_feedback">Send App Feedback</string>
     <string name="rt_ideas">Ideas For New Features</string>
     <string name="rt_message_infrastructure_problem">Missing route, broken bench, etc.</string>
-    <string name="rt_message_customer_service">Driver compliments and complaints, lost &amp; found, etc.</string>
+    <string name="rt_message_customer_service">Driver compliments and complaints, lost &amp; found,
+        etc.
+    </string>
     <string name="rt_message_stop_problem">Missing route, wrong stop name, etc.</string>
     <string name="rt_message_arrival_problem">Vehicle never came, wrong arrival time, etc.</string>
     <string name="rt_message_app_feedback">Design, bugs, etc.</string>
@@ -636,7 +642,7 @@
     <string name="night_light_create_shortcut">Create shortcut</string>
 
     <!-- Tutorials -->
-    <string name="tutorial_button_text" >Got it!</string>
+    <string name="tutorial_button_text">Got it!</string>
     <string name="tutorial_welcome_title">Welcome to OneBusAway!</string>
     <string name="tutorial_welcome_text">Tap on a stop (green dot on the map) to see arrival
         times.

@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011-2013 Paul Watts (paulcwatts@gmail.com) and individual contributors.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2011-2013 Paul Watts (paulcwatts@gmail.com) and individual contributors.
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -17,8 +19,8 @@
 
     <permission
             android:name="${applicationId}.permission.TRIP_SERVICE"
-            android:label="@string/trip_service_perm_label"
             android:description="@string/trip_service_perm_description"
+            android:label="@string/trip_service_perm_label"
             android:protectionLevel="normal"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -34,9 +36,13 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
     <uses-permission android:name="${applicationId}.permission.TRIP_SERVICE"/>
 
+    <uses-feature
+            android:glEsVersion="0x00020000"
+            android:required="true"/>
+
     <application
+            android:name=".app.Application"
             android:allowBackup="false"
-            android:name="org.onebusaway.android.app.Application"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:theme="@style/Theme.OneBusAway">
@@ -45,116 +51,121 @@
                 android:value="org.onebusaway.android.ui.SearchActivity"/>
 
         <activity
-                android:name="org.onebusaway.android.ui.SearchActivity"
+                android:name=".ui.SearchActivity"
                 android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
+
             <meta-data
                     android:name="android.app.searchable"
                     android:resource="@xml/searchable"/>
         </activity>
-
-        <activity
-                android:name="org.onebusaway.android.ui.HomeActivity">
+        <activity android:name=".ui.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.ArrivalsListActivity"
+                android:name=".ui.ArrivalsListActivity"
                 android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name="org.onebusaway.android.ui.StopInfoActivity">
+        <activity android:name=".ui.StopInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name="org.onebusaway.android.ui.RouteInfoActivity">
+        <activity android:name=".ui.RouteInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name="org.onebusaway.android.ui.TripInfoActivity"/>
+        <activity android:name=".ui.TripInfoActivity"/>
         <activity android:name=".ui.MyRemindersActivity"/>
-        <activity android:name="org.onebusaway.android.ui.TripDetailsActivity">
+        <activity android:name=".ui.TripDetailsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-
         <activity
-                android:name="org.onebusaway.android.ui.MyStopsActivity"
+                android:name=".ui.MyStopsActivity"
                 android:label="@string/stop_shortcut">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.MyRecentStopsActivity"
+                android:name=".ui.MyRecentStopsActivity"
                 android:label="@string/recent_stops_shortcut">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.MyStarredStopsActivity"
+                android:name=".ui.MyStarredStopsActivity"
                 android:label="@string/starred_stops_shortcut">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.MyRoutesActivity"
+                android:name=".ui.MyRoutesActivity"
                 android:label="@string/route_shortcut">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.MyRecentRoutesActivity"
+                android:name=".ui.MyRecentRoutesActivity"
                 android:label="@string/recent_routes_shortcut">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <!-- ActionBarCompat library doesn't have an ActionBarPreferenceActivity, so define parent here-->
+        <!-- ActionBarCompat library doesn't have an ActionBarPreferenceActivity, so define parent here -->
         <activity
-                android:name="org.onebusaway.android.ui.PreferencesActivity"
-                android:parentActivityName="org.onebusaway.android.ui.HomeActivity">
+                android:name=".ui.PreferencesActivity"
+                android:parentActivityName=".ui.HomeActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="org.onebusaway.android.ui.HomeActivity"/>
         </activity>
-        <activity android:name="org.onebusaway.android.ui.RegionsActivity"/>
-        <activity android:name="org.onebusaway.android.ui.AgenciesActivity"/>
+        <activity android:name=".ui.RegionsActivity"/>
+        <activity android:name=".ui.AgenciesActivity"/>
+        <activity android:name=".report.ui.ReportActivity"/>
+        <activity android:name=".report.ui.InfrastructureIssueActivity"/>
+        <activity
+                android:name=".ui.SituationActivity"
+                android:label="@string/situation_activity_label"
+                android:parentActivityName=".ui.HomeActivity">
 
-        <activity android:name="org.onebusaway.android.report.ui.ReportActivity"/>
-        <activity android:name="org.onebusaway.android.report.ui.InfrastructureIssueActivity"/>
-
-        <activity android:name="org.onebusaway.android.ui.SituationActivity"
-                  android:label="@string/situation_activity_label"
-                  android:parentActivityName="org.onebusaway.android.ui.HomeActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="org.onebusaway.android.ui.HomeActivity"/>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.MyRecentStopsAndRoutesActivity"
+                android:name=".ui.MyRecentStopsAndRoutesActivity"
                 android:label="@string/my_recent_title"
-                android:parentActivityName="org.onebusaway.android.ui.HomeActivity">
+                android:parentActivityName=".ui.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -163,12 +174,13 @@
                     android:value="org.onebusaway.android.ui.HomeActivity"/>
         </activity>
         <activity
-                android:name="org.onebusaway.android.ui.NightLightActivity"
+                android:name=".ui.NightLightActivity"
                 android:label="@string/stop_info_option_night_light"
-                android:parentActivityName="org.onebusaway.android.ui.HomeActivity"
+                android:parentActivityName=".ui.HomeActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -178,7 +190,7 @@
         </activity>
         <!-- Provider is defined in build.gradle flavors -->
         <provider
-                android:name="org.onebusaway.android.provider.ObaProvider"
+                android:name=".provider.ObaProvider"
                 android:authorities="${databaseAuthority}"/>
 
         <service
@@ -192,6 +204,7 @@
 
         <receiver android:name=".tripservice.AlarmReceiver">
             <intent-filter>
+
                 <!-- Should match constants for actions defined in TripService -->
                 <action android:name="${applicationId}.action.SCHEDULE"/>
                 <action android:name="${applicationId}.action.POLL"/>
@@ -212,17 +225,16 @@
                 android:value="@string/apiv2_key"/>
 
         <activity
-                android:name="org.onebusaway.android.ui.AboutActivity"
+                android:name=".ui.AboutActivity"
                 android:label="@string/title_activity_about"
-                android:parentActivityName="org.onebusaway.android.ui.PreferencesActivity"
+                android:parentActivityName=".ui.PreferencesActivity"
                 android:theme="@style/Theme.OneBusAway.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="org.onebusaway.android.ui.PreferencesActivity"/>
         </activity>
+        <activity android:name=".report.ui.TestSocialActivity">
+        </activity>
     </application>
 
-    <uses-feature
-            android:glEsVersion="0x00020000"
-            android:required="true"/>
 </manifest>

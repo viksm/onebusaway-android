@@ -19,12 +19,16 @@ import org.onebusaway.android.R;
 import org.onebusaway.android.app.Application;
 import org.onebusaway.android.io.ObaAnalytics;
 import org.onebusaway.android.io.elements.ObaRegion;
+import org.onebusaway.android.map.MapParams;
 import org.onebusaway.android.ui.MaterialListAdapter;
 import org.onebusaway.android.ui.MaterialListItem;
 import org.onebusaway.android.util.UIUtils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -145,7 +149,35 @@ public class ReportTypeListFragment extends ListFragment implements AdapterView.
             ObaAnalytics.reportEventWithCategory(ObaAnalytics.ObaEventCategory.UI_ACTION.toString(),
                     getString(R.string.analytics_action_problem),
                     getString(R.string.analytics_label_idea_scale));
+        } else if (rti.getTitle().contains("Test")) {
+            openSocialActivity();
         }
+    }
+
+    private void openSocialActivity() {
+        Intent intent = new Intent(getContext(), TestSocialActivity.class);
+        intent.putExtra(TestSocialActivity.HAS_EXTRA_BUTTON, true);
+        intent.putExtra(TestSocialActivity.EXTRA_BUTTON_NAME, "Report an issue");
+        // Pass another intent as a parameter
+        intent.putExtra(TestSocialActivity.EXTRA_BUTTON_ACTION, makeTargetIntentForIssueReporting());
+        getActivity().startActivity(intent);
+    }
+
+    /**
+     * This method creates an intent for Problem reporting activity
+     * @return an intent
+     */
+    private Intent makeTargetIntentForIssueReporting() {
+        Intent myIntent = new Intent(getContext(), InfrastructureIssueActivity.class);
+        myIntent.putExtra(MapParams.STOP_ID, "Hillsborough Area Regional Transit_6651");
+        myIntent.putExtra(MapParams.STOP_NAME, "Sinclair Hills Rd @ Livingston Av");
+        myIntent.putExtra(MapParams.STOP_CODE, "6651");
+        myIntent.putExtra(MapParams.CENTER_LAT, 28.091559);
+        myIntent.putExtra(MapParams.CENTER_LON, -82.431349);
+        myIntent.putExtra(InfrastructureIssueActivity.SELECTED_SERVICE,
+                getString(R.string.ri_selected_service_stop));
+
+        return myIntent;
     }
 
     private void goToCustomerServices() {

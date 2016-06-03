@@ -80,9 +80,9 @@ public class InfrastructureIssueActivity extends BaseReportActivity implements
         ReportProblemFragmentCallback, IssueLocationHelper.Callback,
         SimpleArrivalListFragment.Callback, GeocoderTask.Callback {
 
-    private static final String SHOW_STOP_MARKER = ".showMarker";
+    public static final String SELECTED_SERVICE = ".selectedService";
 
-    private static final String SELECTED_SERVICE = ".selectedService";
+    private static final String SHOW_STOP_MARKER = ".showMarker";
 
     private static final String SELECTED_SERVICE_TYPE = ".selectedServiceType";
 
