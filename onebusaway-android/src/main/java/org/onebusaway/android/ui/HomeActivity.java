@@ -882,9 +882,16 @@ public class HomeActivity extends AppCompatActivity
         ShowcaseViewUtils.showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_HEADER_ARRIVAL_INFO, this,
                 response);
 
-        // Show the starred routes tutorial
-        ShowcaseViewUtils
-                .showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_HEADER_STAR_ROUTE, this, response);
+        // Make sure the panel is stationary before showing the starred routes tutorial
+        if (mSlidingPanel != null &&
+                (isSlidingPanelCollapsed() ||
+                        mSlidingPanel.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED ||
+                        mSlidingPanel.getPanelState()
+                                == SlidingUpPanelLayout.PanelState.EXPANDED)) {
+            ShowcaseViewUtils
+                    .showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_HEADER_STAR_ROUTE, this,
+                            response);
+        }
     }
 
     /**
