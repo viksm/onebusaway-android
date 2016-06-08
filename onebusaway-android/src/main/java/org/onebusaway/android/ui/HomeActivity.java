@@ -585,6 +585,7 @@ public class HomeActivity extends AppCompatActivity
                     getString(R.string.analytics_label_button_press_search_box));
             return true;
         } else if (id == R.id.recent_stops_routes) {
+            ShowcaseViewUtils.doNotShowTutorial(ShowcaseViewUtils.TUTORIAL_RECENT_STOPS_ROUTES);
             Intent myIntent = new Intent(this, MyRecentStopsAndRoutesActivity.class);
             startActivity(myIntent);
             return true;
@@ -881,27 +882,9 @@ public class HomeActivity extends AppCompatActivity
         ShowcaseViewUtils.showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_HEADER_ARRIVAL_INFO, this,
                 response);
 
-        // Show the starred stop tutorial
-        if (isSlidingPanelCollapsed()) {
-            ShowcaseViewUtils
-                    .showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_HEADER_STAR_STOP, this,
-                            response);
-        }
-
         // Show the starred routes tutorial
         ShowcaseViewUtils
                 .showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_HEADER_STAR_ROUTE, this, response);
-
-        // Show the "more" arrival info tutorial
-        ShowcaseViewUtils
-                .showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_INFO_MORE, this, response);
-
-        if (!isSlidingPanelCollapsed() &&
-                mArrivalsListFragment.getListAdapter() instanceof ArrivalsListAdapterStyleB) {
-            ShowcaseViewUtils
-                    .showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_STYLE_B_SHOW_ROUTE, this,
-                            response);
-        }
     }
 
     /**
@@ -923,8 +906,6 @@ public class HomeActivity extends AppCompatActivity
         bundle.putBoolean(MapParams.ZOOM_INCLUDE_CLOSEST_VEHICLE, true);
         bundle.putString(MapParams.ROUTE_ID, arrivalInfo.getInfo().getRouteId());
         mMapFragment.setMapMode(MapParams.MODE_ROUTE, bundle);
-
-        ShowcaseViewUtils.showTutorial(ShowcaseViewUtils.TUTORIAL_VEHICLE_ICONS, this, null);
 
         return true;
     }
@@ -1284,9 +1265,6 @@ public class HomeActivity extends AppCompatActivity
                     mExpandCollapse.setContentDescription(mContext.getResources()
                             .getString(R.string.stop_header_sliding_panel_open));
                 }
-
-                ShowcaseViewUtils.showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_SORT,
-                        HomeActivity.this, null);
             }
 
             @Override
@@ -1329,9 +1307,6 @@ public class HomeActivity extends AppCompatActivity
                     mExpandCollapse.setContentDescription(mContext.getResources()
                             .getString(R.string.stop_header_sliding_panel_open));
                 }
-
-                ShowcaseViewUtils.showTutorial(ShowcaseViewUtils.TUTORIAL_ARRIVAL_SORT,
-                        HomeActivity.this, null);
             }
 
             @Override

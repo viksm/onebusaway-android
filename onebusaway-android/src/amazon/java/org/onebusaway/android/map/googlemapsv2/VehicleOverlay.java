@@ -692,9 +692,6 @@ public class VehicleOverlay implements AmazonMap.OnInfoWindowClickListener {
                 mMarkerRefreshHandler.postDelayed(mMarkerRefresh, MARKER_REFRESH_PERIOD);
             }
 
-            ShowcaseViewUtils.showTutorial(ShowcaseViewUtils.TUTORIAL_VEHICLE_INFO_WINDOW,
-                    (AppCompatActivity) mActivity, null);
-
             return view;
         }
 
