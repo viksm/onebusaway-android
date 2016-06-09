@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 University of South Florida (sjbarbeau@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.onebusaway.android.util;
 
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
@@ -24,6 +39,7 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 
 /**
@@ -216,6 +232,9 @@ public class ShowcaseViewUtils {
                 .setContentTitle(title)
                 .setContentText(text)
                 .build();
+
+        addCheckBox(activity);
+
         // If button should be positioned to the left, then set the parameters
         if (moveButtonLeft) {
             moveButtonLeft(activity, mShowcaseView);
@@ -226,6 +245,14 @@ public class ShowcaseViewUtils {
 
         // Set the preference for this tutorial type so it doesn't show again
         doNotShowTutorial(tutorialType);
+    }
+
+    private static void addCheckBox(AppCompatActivity activity) {
+        CheckBox checkBox = new CheckBox(mShowcaseView.getContext());
+        checkBox.setTextColor(activity.getResources().getColor(R.color.tutorial_text));
+        checkBox.setTextSize(20);
+        checkBox.setText("Test");
+        mShowcaseView.addView(checkBox);
     }
 
     /**
