@@ -28,6 +28,8 @@ public class MapParams {
 
     public static final String ROUTE_ID = ".RouteId";
 
+    public static final String PREV_MAP_VIEW = ".PreviousMapView";
+
     public static final String CENTER_LAT = ".MapCenterLat";
 
     public static final String CENTER_LON = ".MapCenterLon";

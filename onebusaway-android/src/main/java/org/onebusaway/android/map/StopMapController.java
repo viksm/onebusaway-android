@@ -187,10 +187,12 @@ public class StopMapController implements MapModeController,
             }
             mCallback.getMapView().setZoom(mapZoom);
 
+            // TODO - if we have a focused stopId, set that as center
             if (center != null) {
                 mCallback.getMapView().setMapCenter(center, false, false);
                 onLocation();
             } else {
+                // TODO - should we set restored view map center here first, and then try to center on location?
                 mCallback.setMyLocation(false, false);
             }
         } else {
