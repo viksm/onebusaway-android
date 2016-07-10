@@ -573,25 +573,36 @@ public class BaseMapFragment extends SupportMapFragment
         });
     }
 
+    /**
+     * Sets the map view to the last available location
+     *
+     * @param useDefaultZoom    true if the CAMERA_DEFAULT_ZOOM should be used, false if the
+     *                          current
+     *                          zoom level should be kept
+     * @param animateToLocation true if the map should animate the transition to the new view, or
+     *                          false if it should snap to the new view without animation
+     * @return true if there was a a location to set the map view to, false if there was not
+     */
     @Override
     @SuppressWarnings("deprecation")
-    public void setMyLocation(boolean useDefaultZoom, boolean animateToLocation) {
+    public boolean setMyLocation(boolean useDefaultZoom, boolean animateToLocation) {
         if (!LocationUtils.isLocationEnabled(getActivity()) && mRunning && UIUtils.canManageDialog(
                 getActivity())) {
             showDialog(MapDialogFragment.NOLOCATION_DIALOG);
-            return;
+            return false;
         }
 
-        Location lastLocation = Application.getLastKnownLocation(this.getActivity(), null);
+        Location lastLocation = Application.getLastKnownLocation(getActivity(), null);
         if (lastLocation == null) {
             Toast.makeText(getActivity(),
                     getResources()
                             .getString(R.string.main_waiting_for_location),
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         setMyLocation(lastLocation, useDefaultZoom, animateToLocation);
+        return true;
     }
 
     private void setMyLocation(Location l, boolean useDefaultZoom, boolean animateToLocation) {

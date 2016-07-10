@@ -30,6 +30,8 @@ public class MapParams {
 
     public static final String PREV_MAP_VIEW = ".PreviousMapView";
 
+    public static final String DONTCENTER_ON_LOCATION = ".DontCenterOnLocation";
+
     public static final String CENTER_LAT = ".MapCenterLat";
 
     public static final String CENTER_LON = ".MapCenterLon";

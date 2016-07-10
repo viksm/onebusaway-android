@@ -713,4 +713,8 @@ public class UIUtilTest extends ObaTestCase {
     private String formatTime(long time) {
         return UIUtils.formatTime(getContext(), time);
     }
+
+    public void testGetMapCenter() {
+        // TODO
+    }
 }

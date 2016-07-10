@@ -28,6 +28,7 @@ import org.onebusaway.android.io.request.ObaStopsForLocationResponse;
 import org.onebusaway.android.map.googlemapsv2.BaseMapFragment;
 import org.onebusaway.android.util.LocationUtils;
 import org.onebusaway.android.util.RegionUtils;
+import org.onebusaway.android.util.UIUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -177,27 +178,47 @@ public class StopMapController implements MapModeController,
     @Override
     public void setState(Bundle args) {
         if (args != null) {
-            Location center = null;
+            Location center = UIUtils.getMapCenter(args);
             float mapZoom = args.getFloat(MapParams.ZOOM, MapParams.DEFAULT_ZOOM);
-
-            double lat = args.getDouble(MapParams.CENTER_LAT);
-            double lon = args.getDouble(MapParams.CENTER_LON);
-            if (lat != 0.0 && lon != 0.0) {
-                center = LocationUtils.makeLocation(lat, lon);
-            }
             mCallback.getMapView().setZoom(mapZoom);
 
-            // TODO - if we have a focused stopId, set that as center
-            if (center != null) {
-                mCallback.getMapView().setMapCenter(center, false, false);
-                onLocation();
-            } else {
-                // TODO - should we set restored view map center here first, and then try to center on location?
-                mCallback.setMyLocation(false, false);
+            // If the STOP_ID was set in the bundle, then we should focus on that stop
+            String stopId = args.getString(MapParams.STOP_ID);
+            if (stopId != null && center != null) {
+                setMapCenter(center);
+                return;
+            }
+
+            boolean dontCenterOnLocation = args.getBoolean(MapParams.DONTCENTER_ON_LOCATION);
+
+            // Try to set map based on real-time location, unless state says no
+            if (!dontCenterOnLocation) {
+                boolean setLocation = mCallback.setMyLocation(false, false);
+                if (setLocation) {
+                    return;
+                }
+            }
+
+            // If we have a previous map view, center map on that
+            boolean havePrevMapView = args.getBoolean(MapParams.PREV_MAP_VIEW, false);
+            if (havePrevMapView && center != null) {
+                setMapCenter(center);
+                return;
             }
         } else {
+            // We don't have any state info - just center on last known location
             mCallback.setMyLocation(false, false);
         }
+    }
+
+    /**
+     * Sets the map center and loads stops for the new map view
+     *
+     * @param center new coordinates for the map to center on
+     */
+    private void setMapCenter(Location center) {
+        mCallback.getMapView().setMapCenter(center, false, false);
+        onLocation();
     }
 
     @Override
