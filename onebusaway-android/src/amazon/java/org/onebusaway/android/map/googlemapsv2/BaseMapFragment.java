@@ -27,6 +27,7 @@
  */
 package org.onebusaway.android.map.googlemapsv2;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.amazon.geo.mapsv2.CameraUpdateFactory;
 import com.amazon.geo.mapsv2.LocationSource;
 import com.amazon.geo.mapsv2.OnMapReadyCallback;
@@ -188,6 +189,9 @@ public class BaseMapFragment extends SupportMapFragment
                              Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
+        mLocationHelper = new LocationHelper(getActivity());
+        mLocationHelper.registerListener(this);
+
         mMap = getMap();
 
         if (MapHelpV2.isMapsInstalled(getActivity())) {
@@ -202,9 +206,6 @@ public class BaseMapFragment extends SupportMapFragment
         } else {
             MapHelpV2.promptUserInstallMaps(getActivity());
         }
-
-        mLocationHelper = new LocationHelper(getActivity());
-        mLocationHelper.registerListener(this);
 
         // If we have a recent location, show this while we're waiting on the LocationHelper
         Location l = Application
@@ -286,7 +287,9 @@ public class BaseMapFragment extends SupportMapFragment
 
     @Override
     public void onPause() {
-        mLocationHelper.onPause();
+        if (mLocationHelper != null) {
+            mLocationHelper.onPause();
+        }
         if (mController != null) {
             mController.onPause();
         }
@@ -520,11 +523,15 @@ public class BaseMapFragment extends SupportMapFragment
             // Too early or late in the Fragment lifecycle to take any action
             return;
         }
-        if (currentRegionChanged
-                && Application
-                .getLastKnownLocation(this.getActivity(), mLocationHelper.getGoogleApiClient())
-                == null) {
-            // Move map view after a new region has been selected, if we don't have user location
+
+        Location l = Application
+                .getLastKnownLocation(getActivity(), mLocationHelper.getGoogleApiClient());
+        // If the region changed, and we don't have a location or the map center is still (0,0),
+        // then zoom to the region
+        if (currentRegionChanged &&
+                (l == null ||
+                        (getMapCenterAsLocation().getLatitude() == 0.0 &&
+                                getMapCenterAsLocation().getLongitude() == 0.0))) {
             zoomToRegion();
         }
 
@@ -592,7 +599,12 @@ public class BaseMapFragment extends SupportMapFragment
             return false;
         }
 
-        Location lastLocation = Application.getLastKnownLocation(getActivity(), null);
+        GoogleApiClient apiClient = null;
+        if (mLocationHelper != null) {
+            apiClient = mLocationHelper.getGoogleApiClient();
+        }
+
+        Location lastLocation = Application.getLastKnownLocation(getActivity(), apiClient);
         if (lastLocation == null) {
             Toast.makeText(getActivity(),
                     getResources()
@@ -633,7 +645,7 @@ public class BaseMapFragment extends SupportMapFragment
         }
     }
 
-    void zoomToRegion() {
+    public void zoomToRegion() {
         // If we have a region, then zoom to it.
         ObaRegion region = Application.get().getCurrentRegion();
 

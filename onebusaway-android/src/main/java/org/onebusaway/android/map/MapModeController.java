@@ -69,6 +69,9 @@ public interface MapModeController {
         boolean setMyLocation(boolean useDefaultZoom, boolean animateToLocation);
 
         void notifyOutOfRange();
+
+        // Zooms to the region bounds, if a region has been set
+        void zoomToRegion();
     }
 
     /**

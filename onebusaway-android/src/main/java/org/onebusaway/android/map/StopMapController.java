@@ -175,6 +175,9 @@ public class StopMapController implements MapModeController,
         mLoader.startLoading();
     }
 
+    /**
+     * Sets the initial state of where the map is focused, and it's zoom level
+     */
     @Override
     public void setState(Bundle args) {
         if (args != null) {
@@ -206,8 +209,13 @@ public class StopMapController implements MapModeController,
             }
         } else {
             // We don't have any state info - just center on last known location
-            mCallback.setMyLocation(false, false);
+            boolean setLocation = mCallback.setMyLocation(false, false);
+            if (setLocation) {
+                return;
+            }
         }
+        // If all else fails, just center on the region
+        mCallback.zoomToRegion();
     }
 
     /**
