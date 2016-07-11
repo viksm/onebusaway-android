@@ -189,7 +189,7 @@ public class StopMapController implements MapModeController,
                 return;
             }
 
-            boolean dontCenterOnLocation = args.getBoolean(MapParams.DONTCENTER_ON_LOCATION);
+            boolean dontCenterOnLocation = args.getBoolean(MapParams.DO_N0T_CENTER_ON_LOCATION);
 
             // Try to set map based on real-time location, unless state says no
             if (!dontCenterOnLocation) {
@@ -200,8 +200,7 @@ public class StopMapController implements MapModeController,
             }
 
             // If we have a previous map view, center map on that
-            boolean havePrevMapView = args.getBoolean(MapParams.PREV_MAP_VIEW, false);
-            if (havePrevMapView && center != null) {
+            if (center != null) {
                 setMapCenter(center);
                 return;
             }

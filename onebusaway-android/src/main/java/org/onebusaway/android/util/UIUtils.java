@@ -1295,14 +1295,16 @@ public final class UIUtils {
 
     /**
      * Returns the location of the map center if it has been previously saved in the bundle, or
-     * null
-     * if it wasn't saved in the bundle.
+     * null if it wasn't saved in the bundle.
      *
      * @param b bundle to check for the map center
      * @return the location of the map center if it has been previously saved in the bundle, or null
      * if it wasn't saved in the bundle.
      */
     public static Location getMapCenter(Bundle b) {
+        if (b == null) {
+            return null;
+        }
         Location center = null;
         double lat = b.getDouble(MapParams.CENTER_LAT);
         double lon = b.getDouble(MapParams.CENTER_LON);

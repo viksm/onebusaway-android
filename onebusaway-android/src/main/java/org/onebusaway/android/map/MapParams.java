@@ -28,9 +28,7 @@ public class MapParams {
 
     public static final String ROUTE_ID = ".RouteId";
 
-    public static final String PREV_MAP_VIEW = ".PreviousMapView";
-
-    public static final String DONTCENTER_ON_LOCATION = ".DontCenterOnLocation";
+    public static final String DO_N0T_CENTER_ON_LOCATION = ".DoNotCenterOnLocation";
 
     public static final String CENTER_LAT = ".MapCenterLat";
 

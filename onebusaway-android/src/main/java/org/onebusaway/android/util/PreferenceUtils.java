@@ -185,7 +185,6 @@ public class PreferenceUtils {
         Double lon = PreferenceUtils.getDouble(MapParams.CENTER_LON, 0.0d);
         float zoom = PreferenceUtils.getFloat(MapParams.ZOOM, MapParams.DEFAULT_ZOOM);
         if (lat != 0.0 && lon != 0.0 && zoom != 0.0) {
-            b.putBoolean(MapParams.PREV_MAP_VIEW, true);
             b.putDouble(MapParams.CENTER_LAT, lat);
             b.putDouble(MapParams.CENTER_LON, lon);
             b.putFloat(MapParams.ZOOM, zoom);
