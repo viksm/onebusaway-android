@@ -4,11 +4,14 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.onebusaway.android.R;
 import org.onebusaway.android.io.ObaAnalytics;
+import org.onebusaway.android.util.UIUtils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +22,8 @@ import android.widget.TextView;
  * An Activity that displays version, license, and contributor information
  */
 public class AboutActivity extends AppCompatActivity {
+
+    TextView mTextView;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AboutActivity.class);
@@ -37,7 +42,7 @@ public class AboutActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TextView tv = (TextView) findViewById(R.id.about_text);
+        mTextView = (TextView) findViewById(R.id.about_text);
         String versionString = "";
         int versionCode = 0;
         try {
@@ -73,12 +78,58 @@ public class AboutActivity extends AppCompatActivity {
 
         builder.append("\n\n");
 
-        tv.setText(builder.toString());
+        new GoogleOssAsyncTask(builder.toString()).execute();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         ObaAnalytics.reportActivityStart(this);
+    }
+
+    /**
+     * Loads the OSS license info from Google Play Services asynchronously, as it currently takes
+     * a long time to load (see #600)
+     */
+    private class GoogleOssAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private ProgressDialog mProgressDialog;
+
+        private String mMainText;
+
+        /**
+         * @param mainText main text that appears above the Google OSS
+         */
+        public GoogleOssAsyncTask(String mainText) {
+            mMainText = mainText;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if (UIUtils.canManageDialog(AboutActivity.this)) {
+                mProgressDialog = ProgressDialog.show(AboutActivity.this, "",
+                        "Loading...", true);
+                mProgressDialog.setIndeterminate(true);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
+            }
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // We must modify the TextView from a UI Thread, so can't do it here
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void results) {
+            // We must modify the TextView from a UI Thread, so do it before hiding progress bar
+            mTextView.setText(mMainText);
+            if (UIUtils.canManageDialog(AboutActivity.this) && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+            super.onPostExecute(results);
+        }
     }
 }
