@@ -53,7 +53,7 @@ before_script:
 
 # Only run tests on the main two OneBusAway brand flavors
 script:
-  - ./gradlew connectedObaGoogleDebugAndroidTest connectedObaAmazonDebugAndroidTest -PdisablePreDex
+  - travis_wait 30 ./gradlew connectedObaGoogleDebugAndroidTest connectedObaAmazonDebugAndroidTest -PdisablePreDex
 
 notifications:
   webhooks:
