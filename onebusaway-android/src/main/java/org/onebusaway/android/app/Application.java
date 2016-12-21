@@ -496,7 +496,7 @@ public class Application extends android.app.Application {
     private void initOpen311(ObaRegion region) {
         if (BuildConfig.DEBUG) {
             Open311Manager.getSettings().setDebugMode(true);
-            Open311Manager.getSettings().setDryRun(true);
+            //Open311Manager.getSettings().setDryRun(true);
         }
 
         // Clear all open311 endpoints

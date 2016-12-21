@@ -51,6 +51,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.location.Location;
@@ -1467,5 +1468,60 @@ public final class UIUtils {
             center = LocationUtils.makeLocation(lat, lon);
         }
         return center;
+    }
+
+    /**
+     * Decode a smaller sampled bitmap given a large bitmap.
+     * Adapted from https://developer.android.com/training/displaying-bitmaps/load-bitmap.html.
+     *
+     * @param pathName  path to the full size image file
+     * @param reqWidth  desired width
+     * @param reqHeight desired height
+     * @return a smaller version of the image at pathName, given the desired width and height
+     */
+    public static Bitmap decodeSampledBitmapFromFile(String pathName, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(pathName);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(pathName, options);
+    }
+
+    /**
+     * Calculate an image sample size value that is a power of two based on a target width and
+     * height.  Used to avoid loading full image into memory and generating an OutOfMemory
+     * exception.
+     * From https://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+     *
+     * @return a sample size value that is a power of two based on a target image width and height
+     */
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
