@@ -33,7 +33,6 @@ import org.onebusaway.android.util.UIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -441,6 +439,7 @@ public class Open311ProblemFragment extends BaseReportFragment implements
 
         if (requestCode == ReportConstants.GALLERY_INTENT && resultCode == Activity.RESULT_OK &&
                 data != null) {
+            // Get the gallery image info
             mCapturedImageURI = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(mCapturedImageURI,
@@ -450,28 +449,21 @@ public class Open311ProblemFragment extends BaseReportFragment implements
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             mImagePath = cursor.getString(columnIndex);
             cursor.close();
+        }
 
+        // Whether image was from gallery or captured via camera, we need to downscale it for ImageView
+        if ((requestCode == ReportConstants.GALLERY_INTENT
+                || requestCode == ReportConstants.CAPTURE_PICTURE_INTENT)
+                && resultCode == Activity.RESULT_OK) {
             // Load thumbnail to avoid OutOfMemory issue on Galaxy S5 - see #730
-            Bitmap thumbnail = UIUtils.decodeSampledBitmapFromFile(mImagePath,
-                    mIssueImageView.getWidth(), mIssueImageView.getHeight());
-            mIssueImageView.setImageBitmap(thumbnail);
-        } else if (requestCode == ReportConstants.CAPTURE_PICTURE_INTENT &&
-                resultCode == Activity.RESULT_OK && data != null) {
-            Bundle extras = data.getExtras();
-            Bitmap thumbnail = (Bitmap) extras.get("data");
-            mIssueImageView.setImageBitmap(thumbnail);
-
-            mCapturedImageURI = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(mCapturedImageURI,
-                    filePathColumn, null, null, null);
-            if (cursor == null) {
-                return;
+            Bitmap thumbnail = null;
+            try {
+                thumbnail = UIUtils.decodeSampledBitmapFromFile(mImagePath,
+                        mIssueImageView.getWidth(), mIssueImageView.getHeight());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            mImagePath = cursor.getString(columnIndex);
-            cursor.close();
+            mIssueImageView.setImageBitmap(thumbnail);
         }
     }
 
@@ -508,7 +500,7 @@ public class Open311ProblemFragment extends BaseReportFragment implements
                 setDevice_id(tm.getDeviceId());
 
         if (mImagePath != null) {
-            builder.setMedia(new File(mImagePath));
+            attachImage(builder);
         }
 
         ServiceRequest serviceRequest = builder.createServiceRequest();
@@ -537,6 +529,54 @@ public class Open311ProblemFragment extends BaseReportFragment implements
         } else {
             createToastMessage(Open311Validator.getErrorMessageForServiceRequestByErrorCode(errorCode));
         }
+    }
+
+    /**
+     * Attaches the captured image saved in this fragment to the provided builder
+     *
+     * @param builder the builder to attach the image to
+     */
+    private void attachImage(ServiceRequest.Builder builder) {
+        // Downsample the image file to avoid uploading huge images
+        File smallImageFile = null;
+        try {
+            smallImageFile = UIUtils.createImageFile(getContext(), "-small");
+        } catch (IOException ex) {
+            // Error occurred while creating the File
+            createToastMessage(getString(R.string.ri_resize_image_problem));
+            Log.e(TAG, "Couldn't resize image - " + ex);
+        }
+
+        // Continue only if the File was successfully created
+        if (smallImageFile != null) {
+            // Max SeeClickFix resolution image is "800x600 image center cropped"
+            final int WIDTH = 800, HEIGHT = 800;
+            Bitmap smallImage;
+            FileOutputStream out = null;
+            try {
+                smallImage = UIUtils.decodeSampledBitmapFromFile(mImagePath,
+                        WIDTH, HEIGHT);
+                out = new FileOutputStream(smallImageFile);
+                smallImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Something went wrong - just use the full size image
+                smallImageFile = new File(mImagePath);
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            // Something went wrong - just use the full size image
+            smallImageFile = new File(mImagePath);
+        }
+
+        builder.setMedia(smallImageFile);
     }
 
     /**
@@ -770,19 +810,10 @@ public class Open311ProblemFragment extends BaseReportFragment implements
 
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-
-            String fileName = "temp.jpg";
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.TITLE, fileName);
-//            mCapturedImageURI = getActivity().getContentResolver().insert(
-//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-//            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
-
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                photoFile = createImageFile();
+                photoFile = UIUtils.createImageFile(getContext(), null);
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 createToastMessage(getString(R.string.ri_open_camera_problem));
@@ -791,32 +822,13 @@ public class Open311ProblemFragment extends BaseReportFragment implements
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-//                Uri photoURI = FileProvider.getUriForFile(getActivity(),
-//                        "com.example.android.fileprovider",
-//                        photoFile);
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-
+                // Save a file: path for use with ACTION_VIEW intents
+                mImagePath = photoFile.getAbsolutePath();
                 mCapturedImageURI = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                 startActivityForResult(takePictureIntent, ReportConstants.CAPTURE_PICTURE_INTENT);
             }
         }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mImagePath = image.getAbsolutePath();
-        return image;
     }
 
     private void openGallery() {
